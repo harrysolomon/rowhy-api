@@ -14,9 +14,14 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "mongodb": "^3.6.5",
     "mongoose": "^5.10.13",
     "morgan": "~1.9.1",
-    "npm5": "^5.0.0-beta.69"
+    "mpath": "^0.8.3",
+    "mquery": "^3.2.4",
+    "npm5": "^5.0.0-beta.69",
+    "regexp-clone": "^1.0.0",
+    "sliced": "^1.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

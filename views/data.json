@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "scenario_type":"Bachelors Degree",
+        "scenario_description": "Will I make more money with a Bachelor's degree or no college degree at all?",
+        "scenario_icon": "../assets/svg/illustrations/mortarboard.svg",
+        "scenario_icon_owner": " Zlatko Najdenovski",
+        "scenario_icon_owner_link": "https://www.flaticon.com/authors/zlatko-najdenovski"
+    },
+    {
+        "id": 2,
+        "scenario_type":"Home Buying",
+        "scenario_description": "Will I make more money buying or renting a home?",
+        "scenario_icon": "../assets/svg/illustrations/home.svg",
+        "scenario_icon_owner": " Becris",
+        "scenario_icon_owner_link": "https://www.flaticon.com/authors/becris"
+    },
+    {
+        "id": 3,
+        "scenario_type":"Car Buying",
+        "scenario_description": "Will I make more money buying or leasing a car?",
+        "scenario_icon": "../assets/svg/illustrations/car.svg",
+        "scenario_icon_owner": " Freepik",
+        "scenario_icon_owner_link": "https://www.flaticon.com/authors/freepik"
+    }
+]

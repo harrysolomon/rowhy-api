@@ -13,13 +13,13 @@ var TimeSaverSchema = new Schema(
     }],
     inputs:[{
       cadences:{
-        _id: {type: Schema.Types.ObjectId, ref: 'CadenceSchema', required: true},
+        _id: {type: String, required: true},
         period:{type: String, required: true},
         name:{type: String, required: true}
       },
     current_time_spent:{type: Number, required: true},
     current_time_spent_period:{
-      _id: {type: Schema.Types.ObjectId, ref: 'CadenceSchema', required: true},
+      _id: {type: String, required: true},
       period:{type: String, required: true},
       name: {type: String, required: true},
       plural: {type: String, required: true},

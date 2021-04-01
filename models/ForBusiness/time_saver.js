@@ -40,7 +40,8 @@ var TimeSaverSchema = new Schema(
         time_save:{type: Number, required: true},
         time_unit:{type: String, required: true}   
     }
-    }]
+    }],
+    deleted: {type: Boolean, required: true}
   },
   { timestamps: true },
   {collection: 'timesavers'}

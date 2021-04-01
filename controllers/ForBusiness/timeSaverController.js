@@ -9,7 +9,10 @@ var data_sanity = require('../../functions/data_sanity')
 
 exports.createData = (req, res) => {
     
-    //let chart_data = time_save_functions.new_cost(req.body.inputs,req.query)
+    if(!req.body.hasOwnProperty('deleted')){
+        req.body.deleted = false
+    }
+    
     let bad_data = data_sanity.unrealist_timesaver(req.body.inputs)
     if (bad_data.length >= 1){
         res.status(404).send(bad_data[0])
@@ -43,6 +46,10 @@ exports.createData = (req, res) => {
 };
 
 exports.updateData = (req, res) => {
+    
+    if(!req.body.hasOwnProperty('deleted')){
+        req.body.deleted = false
+    }
     //reserving a section here for recalculating the value portion
     let bad_data = data_sanity.unrealist_timesaver(req.body.inputs)
     if (bad_data.length >= 1){
@@ -51,8 +58,6 @@ exports.updateData = (req, res) => {
         intervals = ['year','month','quarter','week','day']
 
         req.body["values"] = cost_per_period.timesaver_cost_per_period(req.body.inputs,intervals)
-    
-        console.log(req.body["values"])
     
         TimeSaver.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, doc) => {
             if (err) {
@@ -65,7 +70,7 @@ exports.updateData = (req, res) => {
 
 exports.getData = (req, res, next) => {
     TimeSaver.find(
-        {_id: req.params.id})
+        {_id: req.params.id, deleted: false})
       .exec((err, data) => {
         if (err) {
           return res.sendStatus(404);
@@ -88,7 +93,7 @@ exports.getData = (req, res, next) => {
   };
 
 exports.timeSaverList = (req, res, next) => {
-    TimeSaver.find()
+    TimeSaver.find({deleted: false})
     .exec((err, data) => {
         if (err) {
             return res.sendStatus(404);
@@ -98,7 +103,7 @@ exports.timeSaverList = (req, res, next) => {
 };
 
 exports.productList = (req, res, next) => {
-    TimeSaverProductSchema.find()
+    TimeSaverProductSchema.find({deleted: false})
     .exec((err, data) => {
         if (err) {
             return res.sendStatus(404);
@@ -124,7 +129,7 @@ exports.productList = (req, res, next) => {
 
 exports.product = (req, res, next) => {
     TimeSaverProductSchema.find(
-        {_id: req.params.id})
+        {_id: req.params.id, deleted: false})
       .exec((err, data) => {
         if (err) {
           return res.sendStatus(404);
@@ -172,7 +177,7 @@ exports.editProduct = (req, res, next) => {
 };
 
 exports.employeeList = (req, res, next) => {
-    TimeSaverEmployeeSchema.find()
+    TimeSaverEmployeeSchema.find({deleted: false})
     .exec((err, data) => {
         if (err) {
             return res.sendStatus(404);
@@ -197,7 +202,7 @@ exports.employeeList = (req, res, next) => {
 
 exports.employee = (req, res, next) => {
     TimeSaverEmployeeSchema.find(
-        {_id: req.params.id})
+        {_id: req.params.id, deleted: false})
       .exec((err, data) => {
         if (err) {
           return res.sendStatus(404);

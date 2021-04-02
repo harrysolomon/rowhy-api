@@ -18,7 +18,7 @@ exports.createData = (req, res) => {
         res.status(404).send(bad_data[0])
     } else {
 
-        intervals = ['year','month','quarter','week','day']
+        intervals = ['year','month','quarter','week','day','hour']
         req.body["values"] = []
 
         req.body["values"] = cost_per_period.timesaver_cost_per_period(req.body.inputs,intervals)
@@ -55,7 +55,7 @@ exports.updateData = (req, res) => {
     if (bad_data.length >= 1){
         res.status(404).send(bad_data[0])
     } else {
-        intervals = ['year','month','quarter','week','day']
+        intervals = ['year','month','quarter','week','day','hour']
 
         req.body["values"] = cost_per_period.timesaver_cost_per_period(req.body.inputs,intervals)
     

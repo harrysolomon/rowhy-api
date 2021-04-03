@@ -21,6 +21,7 @@
     "mquery": "^3.2.4",
     "npm5": "^5.0.0-beta.69",
     "regexp-clone": "^1.0.0",
+    "request": "^2.88.2",
     "sliced": "^1.0.1"
   },
   "devDependencies": {

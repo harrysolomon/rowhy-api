@@ -2,8 +2,9 @@ var time_save_functions = require('../../functions/time_saved')
 var TimeSaver = require('../../models/ForBusiness/time_saver');
 var TimeSaverProductSchema = require('../../models/ForBusiness/time_saver_products');
 var TimeSaverEmployeeSchema = require('../../models/ForBusiness/time_saver_employees');
-var cost_per_period = require('../../functions/time_saver_cost_per_period')
-var data_sanity = require('../../functions/data_sanity')
+var cost_per_period = require('../../functions/time_saver_cost_per_period');
+var data_sanity = require('../../functions/data_sanity');
+var request = require('request');
 
 
 
@@ -47,6 +48,17 @@ exports.createData = (req, res) => {
 
 exports.updateData = (req, res) => {
     
+    //Figuring out how to check for existing products and employees
+    /*request.post('http://localhost:3000/timesaver/product/list', function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            console.log(body) // Print the google web page.
+        }
+    })*/
+    
+    const unique = [...new Set(req.body.inputs.map(input => input.products._id))];
+    
+      console.log(unique)
+    
     if(!req.body.hasOwnProperty('deleted')){
         req.body.deleted = false
     }
@@ -69,6 +81,7 @@ exports.updateData = (req, res) => {
 };
 
 exports.getData = (req, res, next) => {
+    
     TimeSaver.find(
         {_id: req.params.id, deleted: false})
       .exec((err, data) => {
@@ -103,27 +116,13 @@ exports.timeSaverList = (req, res, next) => {
 };
 
 exports.productList = (req, res, next) => {
+    console.log(req.query)
     TimeSaverProductSchema.find({deleted: false})
     .exec((err, data) => {
         if (err) {
             return res.sendStatus(404);
         }
-
-        let response = []
-
-        data.map((product) => {
-            let a_product = {}
-            for (let i = 0; i < req.body.length; ++i){
-                
-                let field = req.body[i]
-                a_product[field] = product[field]
-                
-            }
-            response.push(a_product)
-            
-        })
-
-        res.json(response)
+        res.json(data)
     });
 };
 
@@ -134,22 +133,7 @@ exports.product = (req, res, next) => {
         if (err) {
           return res.sendStatus(404);
         } 
-        console.log(data)
-        let response = []
-
-        data.map((product) => {
-            let a_product = {}
-            for (let i = 0; i < req.body.length; ++i){
-                
-                let field = req.body[i]
-                a_product[field] = product[field]
-                
-            }
-            response.push(a_product)
-            
-        })
-
-        res.json(response)
+        res.json(data)
         
       });
   };
@@ -182,21 +166,7 @@ exports.employeeList = (req, res, next) => {
         if (err) {
             return res.sendStatus(404);
         }
-        let response = []
-
-        data.map((employee) => {
-            let a_employee = {}
-            for (let i = 0; i < req.body.length; ++i){
-                
-                let field = req.body[i]
-                a_employee[field] = employee[field]
-                
-            }
-            response.push(a_employee)
-            
-        })
-
-        res.json(response)
+        res.json(data)
     });
 };
 
@@ -207,22 +177,7 @@ exports.employee = (req, res, next) => {
         if (err) {
           return res.sendStatus(404);
         } 
-
-        let response = []
-
-        data.map((employee) => {
-            let a_employee = {}
-            for (let i = 0; i < req.body.length; ++i){
-                
-                let field = req.body[i]
-                a_employee[field] = employee[field]
-                
-            }
-            response.push(a_employee)
-            
-        })
-
-        res.json(response)
+        res.json(data)
         
       });
   };

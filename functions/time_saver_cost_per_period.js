@@ -4,8 +4,6 @@ module.exports = {
     timesaver_cost_per_period: function(req, interval){
         
         let date_dict = schemas.date_dictionary()
-        
-        let time_now_period = "hour"
 
         let final_result = []
 
@@ -15,42 +13,64 @@ module.exports = {
                 new_cost: 0,
                 cur_cost: 0,
                 value: 0,
-                period: interval[interval_idx]
+                period: interval[interval_idx],
+                per_task: []
             }
+
+            let tasks = []
 
             let total_new_employee_costs = 0
             let total_cur_employee_costs = 0
 
             for (let i = 0;i < req.length;++i){
                 
+                let task = {
+                }
                 if(req[i].products.time_unit === "pct"){
                     time_save_convert = req[i].current_time_spent * (req[i].products.time_save / 100)
                 } else {
                     time_save_convert = req[i].products.time_save * date_dict[req[i].products.time_unit][req[i].current_time_spent_period.period]
                 }
 
-                //calculates cost of employee to do the task once
-                let cur_cost_per_task = req[i].employees.cost * req[i].current_time_spent * date_dict[req[i].current_time_spent_period.period][req[i].employees.period]
-                //calculate cost of employee to do the task for an entire time increment
-                let cur_cost_per_period = cur_cost_per_task * date_dict[interval[interval_idx]][req[i].cadences.period]
-                //cost of the product for the entire time increment
-                let product_cost_rate = req[i].products.cost * date_dict[interval[interval_idx]][req[i].products.period]
-                //cost of employee to do the task once now with the product
-                let new_cost_per_task = (req[i].employees.cost * (req[i].current_time_spent - time_save_convert) * date_dict[req[i].current_time_spent_period.period][req[i].employees.period])
-                //cost of employee to do the task the number of times within the time increment with the help of the product
-                let new_cost_per_period = new_cost_per_task * date_dict[interval[interval_idx]][req[i].cadences.period] + product_cost_rate
-                console.log("new_cost", result.period, new_cost_per_period)
-                console.log("cur_cost", result.period, cur_cost_per_period)
+                task.name = req[i].name
+                task.row_id = req[i]._id
+                task.current_time_spent = req[i].current_time_spent
+                task.current_time_spent_period = req[i].current_time_spent_period.period
+                task.time_spent_cadence = req[i].cadences.period
+                task.employee = req[i].employees.name
+                task.employee_cost = req[i].employees.cost
+                task.employee_cost_period = req[i].employees.period
+                task.employee_rate = (req[i].employees.cost * date_dict[req[i].current_time_spent_period.period][req[i].employees.period]).toFixed(2)
+                task.time_increment = interval[interval_idx]
+                task.product = req[i].products.name
+                task.product_time_save = req[i].products.time_save.toFixed(2)
+                task.product_time_save_unit = req[i].products.time_unit
+                task.product_time_save_pct = ((time_save_convert / req[i].current_time_spent) * 100).toFixed(2)
+                task.new_task_time_pct = ((1 - (time_save_convert / req[i].current_time_spent)) * 100).toFixed(2)
+                task.product_cost_per_task = (req[i].products.cost * date_dict[req[i].cadences.period][req[i].products.period]) // this is technically flawed I think
+                task.product_cost_per_period = (req[i].products.cost * date_dict[interval[interval_idx]][req[i].products.period])
+                task.tasks_in_period = (date_dict[interval[interval_idx]][req[i].cadences.period]).toFixed(2)
+                task.cur_cost_per_task = (task.employee_rate * task.current_time_spent).toFixed(2)
+                task.cur_cost_per_period = (task.cur_cost_per_task * task.tasks_in_period)
+                task.new_cost_per_task = (task.employee_rate * (task.current_time_spent - time_save_convert)) + task.product_cost_per_task // missing product costs
+                task.new_cost_per_period = (task.new_cost_per_task * task.tasks_in_period)
+                task.value_per_task = (task.cur_cost_per_task - task.new_cost_per_task).toFixed(2)
+                task.value_per_period = (task.cur_cost_per_period - task.new_cost_per_period).toFixed(2)
                 
-                total_new_employee_costs += new_cost_per_period
-                total_cur_employee_costs += cur_cost_per_period
-                
+                console.log("cost per period",task.new_cost_per_period,"cost per task is", task.new_cost_per_task, "tasks in a period is", task.tasks_in_period, "product cost period", task.product_cost_per_period)
+
+                tasks.push(task)
+
+                total_new_employee_costs += task.new_cost_per_period
+                total_cur_employee_costs += task.cur_cost_per_period
+
 
             }
-            result.new_cost = Math.round(total_new_employee_costs,0) 
-            result.cur_cost = Math.round(total_cur_employee_costs,0)
+            result.new_cost = total_new_employee_costs
+            result.cur_cost = total_cur_employee_costs
             result.value = result.cur_cost - result.new_cost
-            final_result.push(result)
+            result.per_task = tasks
+            final_result.push(result)     
 
         }
 

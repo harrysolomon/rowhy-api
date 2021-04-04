@@ -142,5 +142,34 @@ module.exports = {
               }
           }
         return date_dict
+    },
+
+    time_saver_summary: function(){
+        let summary = {
+            "name": "",
+            "row_id":"",
+            "current_time_spent":"",
+            "current_time_spent_period":"",
+            "time_spent_cadence":"",
+            "employee_cost":"",
+            "employee_cost_period":"",
+            "employee_rate":"",
+            "cur_cost_per_task":"",
+            "cur_cost_per_period":"",
+            "new_cost_per_task":"",
+            "new_cost_per_period":"",
+            "time_increment":"",
+            "product":"",
+            "product_time_save":"",
+            "product_time_save_period":"",
+            "product_time_save_pct":"",
+            "product_cost_per_task":"",
+            "product_cost_per_period":"",
+            "value_per_task":"",
+            "value_per_period":""
+
+        }
+
+        return summary
     }
 }

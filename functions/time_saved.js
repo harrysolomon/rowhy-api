@@ -23,7 +23,7 @@ module.exports = {
 
         let costs_per_period = cost_per_period.timesaver_cost_per_period(req,interval)
 
-        console.log("the costs per period", costs_per_period)
+        //console.log("the costs are ", costs_per_period[0].per_task)
 
         
         let final_new_employee_cost_array = []
